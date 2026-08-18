@@ -1,5 +1,6 @@
 plugins {
     id("java-library")
+    id("maven-publish")
 }
 
 group = "com.ersikthy"
@@ -33,4 +34,13 @@ tasks.register<JavaExec>("runExample") {
     classpath = sourceSets["main"].runtimeClasspath
     standardInput = System.`in`
 }
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
+}
+
 
