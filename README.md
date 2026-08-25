@@ -60,7 +60,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.your-username:ConsoleMenu:1.0.0")
+    implementation("com.github.Ersikthy:ConsoleMenu:1.0.0")
 }
 ```
 
