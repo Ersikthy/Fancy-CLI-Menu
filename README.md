@@ -1,4 +1,4 @@
-Language: [Vietmanese](README_VN.md) | [English]
+Language: [Vietnamese](README_VN.md) | [English]
 
 # Fancy-CLI-Menu
 
