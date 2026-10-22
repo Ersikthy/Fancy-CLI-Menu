@@ -204,6 +204,7 @@ dependencies {
 
 ---
 
-## License
+## [License](./LICENSE)
+
 
 MIT — free to use, modify, and distribute.
