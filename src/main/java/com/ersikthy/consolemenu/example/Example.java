@@ -1,37 +1,37 @@
 package com.ersikthy.consolemenu.example;
 
 import com.ersikthy.consolemenu.Menu;
+import com.ersikthy.consolemenu.style.Theme;
+
 import static com.ersikthy.consolemenu.util.Output.*;
 
 public class Example {
     public static void main(String[] args) {
-        // Create the main menu
-        Menu mainMenu = new Menu("Main Menu Demo");
-        
+        Menu mainMenu = new Menu("Main Menu Demo", Theme.DEFAULT);
+
         mainMenu.addOption("Say Hello", () -> success("Hello, welcome to ConsoleMenu library!"));
-        
         mainMenu.addOption("System Status", () -> {
             sysLog("All systems are operational.");
             warn("Note: High CPU load simulated.");
         });
 
-        // Add a nested submenu
-        mainMenu.addOption("Settings Submenu", () -> {
-            Menu settingsMenu = new Menu("Settings");
-            settingsMenu.addOption("Toggle Debug Mode", () -> success("Debug mode enabled."));
-            settingsMenu.addOption("Clear Cache", () -> sysLog("Cache cleared successfully."));
-            
-            // Nested menu will display, and typing 'back' returns to Main Menu
-            settingsMenu.displayMenu();
-        });
+        Menu demoSubmenu = new Menu("Demo Submenu", Theme.DEFAULT);
+        demoSubmenu.addOption("Toggle Debug Mode", () -> success("Debug mode enabled."));
+        demoSubmenu.addOption("Clear Cache", () -> sysLog("Cache cleared successfully."));
+        demoSubmenu.addSysOpt("Exit", demoSubmenu::exit);
+        mainMenu.addSubMenu(demoSubmenu);
 
-        // Optional list printer to show custom information before menu choices
-        mainMenu.setListPrinter(() -> {
-            println("Active User: Developer", java.awt.Color.CYAN);
-            println("App Version: 1.0.0", java.awt.Color.CYAN);
+        Menu settingMenu = new Menu("Setting Menu", Theme.DEFAULT);
+        settingMenu.addOption("Change Theme to Cyberpunk", () -> {
+            settingMenu.setTheme(Theme.CYBERPUNK);
+            success("Theme updated to CYBERPUNK!");
         });
+        settingMenu.addSysOpt("Exit", settingMenu::exit);
 
-        // Show the menu
+        mainMenu.addSysSubMenu("Setting", settingMenu);
+        mainMenu.addSysOpt("Exit", mainMenu::exit);
+        mainMenu.addSysOpt("Help", () -> sysLog("Help: Type number or [S], [E] to navigate."));
+
         mainMenu.displayMenu();
     }
 }

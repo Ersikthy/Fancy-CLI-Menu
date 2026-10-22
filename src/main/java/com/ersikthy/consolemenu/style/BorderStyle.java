@@ -1,13 +1,13 @@
-package com.ersikthy.consolemenu.util;
+package com.ersikthy.consolemenu.style;
 
 public enum BorderStyle {
      NONE(" ", " ", " ", " ", " ", " "),
 
-     SINGLE("⌈", "⌉", "⌊", "⌋", "¯", "|"),
+     SINGLE("┌", "┐", "└", "┘", "─", "│"),
 
-     CLASSIC("+", "+", "+", "+", "─", "|"),
+     CLASSIC("+", "+", "+", "+", "─", "│"),
 
-     SQUIRCLE("◜", "◝", "◞", "◟", "─", "|"),
+     SQUIRCLE("╭", "╮", "╰", "╯", "─", "│"),
 
      DOUBLE("╔", "╗", "╚", "╝", "═", "║");
 
@@ -33,4 +33,27 @@ public enum BorderStyle {
           this.vertical = vertical;
      }
 
+     public String getTopLeft() {
+          return topLeft;
+     }
+
+     public String getTopRight() {
+          return topRight;
+     }
+
+     public String getBottomLeft() {
+          return bottomLeft;
+     }
+
+     public String getBottomRight() {
+          return bottomRight;
+     }
+
+     public String getHorizons() {
+          return horizons;
+     }
+
+     public String getVertical() {
+          return vertical;
+     }
 }

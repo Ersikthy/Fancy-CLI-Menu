@@ -10,7 +10,7 @@ public class Input {
 
     public static String readStr(Scanner scanner, String message) {
         while (true) {
-            print(message, null);
+            print(message);
             String input = scanner.nextLine().trim();
             if (!input.isEmpty()) {
                 return input;
@@ -22,7 +22,7 @@ public class Input {
     public static int readInt(Scanner scanner, String message) {
         while (true) {
             try {
-                print(message, null);
+                print(message);
                 return Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
                 error("Please enter a valid number!");
@@ -33,7 +33,7 @@ public class Input {
     public static double readDouble(Scanner scanner, String message) {
         while (true) {
             try {
-                print(message, null);
+                print(message);
                 return Double.parseDouble(scanner.nextLine());
             } catch (NumberFormatException e) {
                 error("Please enter a valid double value!");
@@ -44,7 +44,7 @@ public class Input {
     public static Long readLong(Scanner scanner, String message) {
         while (true) {
             try {
-                print(message, null);
+                print(message);
                 return Long.parseLong(scanner.nextLine());
             } catch (NumberFormatException e) {
                 error("Please enter a valid long value!");
@@ -55,7 +55,7 @@ public class Input {
     public static Float readFloat(Scanner scanner, String message) {
         while (true) {
             try {
-                print(message, null);
+                print(message);
                 return Float.parseFloat(scanner.nextLine());
             } catch (NumberFormatException e) {
                 error("Please enter a valid float value!");
