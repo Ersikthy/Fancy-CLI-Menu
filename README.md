@@ -1,4 +1,4 @@
-# ConsoleMenu
+# Fancy-CLI-Menu
 
 A lightweight Java library for building interactive terminal/CLI menus with themes, breadcrumb navigation, and nested submenus.
 
@@ -184,21 +184,89 @@ Restart IntelliJ after saving.
 
 ## Import in Other Projects
 
-**Via JitPack** (push to GitHub first):
-```kotlin
-repositories {
-    mavenCentral()
-    maven { url = uri("https://jitpack.io") }
-}
-dependencies {
-    implementation("com.github.Ersikthy:ConsoleMenu:1.0.0")
-}
+You can import `Fancy-CLI-Menu` into your projects using any of the following 3 ways:
+
+### 1. IntelliJ IDEA (Plain Java Project)
+
+If your project does not use Gradle or Maven:
+
+1. Copy `Fancy-CLI-Menu-v2.0.0.jar` (from `build/libs/`) into your project (e.g., inside a `libs/` folder).
+2. In IntelliJ IDEA:
+   - **Quick method:** Right-click `Fancy-CLI-Menu-v2.0.0.jar` in the Project view → Select **Add as Library...** → Click **OK**.
+   - **Manual method:** Go to **File** → **Project Structure...** (`Ctrl+Alt+Shift+S`) → **Libraries** → Click **`+`** → **Java** → Select the JAR file → **Apply**.
+
+---
+
+### 2. Maven (`pom.xml`)
+
+**Via JitPack:**
+
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>com.github.Ersikthy</groupId>
+        <artifactId>Fancy-CLI-Menu</artifactId>
+        <version>v2.0.0</version>
+    </dependency>
+</dependencies>
 ```
 
-**Via local JAR** (copy `build/libs/ConsoleMenu-1.0.0.jar` to `libs/`):
+**Via Local JAR:**
+
+```xml
+<dependency>
+    <groupId>com.github.Ersikthy</groupId>
+    <artifactId>Fancy-CLI-Menu</artifactId>
+    <version>v2.0.0</version>
+    <scope>system</scope>
+    <systemPath>${project.basedir}/libs/Fancy-CLI-Menu-v2.0.0.jar</systemPath>
+</dependency>
+```
+
+---
+
+### 3. Gradle
+
+**Via JitPack:**
+
+- **Kotlin DSL (`build.gradle.kts`):**
+  ```kotlin
+  repositories {
+      mavenCentral()
+      maven { url = uri("https://jitpack.io") }
+  }
+
+  dependencies {
+      implementation("com.github.Ersikthy:Fancy-CLI-Menu:v2.0.0")
+  }
+  ```
+
+- **Groovy DSL (`build.gradle`):**
+  ```groovy
+  repositories {
+      mavenCentral()
+      maven { url 'https://jitpack.io' }
+  }
+
+  dependencies {
+      implementation 'com.github.Ersikthy:Fancy-CLI-Menu:v2.0.0'
+  }
+  ```
+
+**Via Local JAR:**
+
+Put `Fancy-CLI-Menu-v2.0.0.jar` into your project's `libs/` folder:
+
 ```kotlin
 dependencies {
-    implementation(files("libs/ConsoleMenu-1.0.0.jar"))
+    implementation(files("libs/Fancy-CLI-Menu-v2.0.0.jar"))
 }
 ```
 
