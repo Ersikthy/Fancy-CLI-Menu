@@ -1,75 +1,201 @@
-# ConsoleMenu Library
+# ConsoleMenu
 
-A simple, lightweight, and customizable Java console menu and input/output utility library. Perfect for interactive terminal/CLI applications.
-
-This project was extracted from the `RentalRoomManagement` application, refactored into a reusable library, and released under the MIT License ("allow all rights/permissions").
+A lightweight Java library for building interactive terminal/CLI menus with themes, breadcrumb navigation, and nested submenus.
 
 ## Features
 
-- **Dynamic Interactive Menu**: Create nested console menus easily with customizable options and custom list/data printers.
-- **Robust Console Input Reader**: Bulletproof wrapper around `Scanner` to read and validate user inputs (`String`, `int`, `double`, `Long`, `Float`) with automated error handling.
-- **Colorful Terminal Output**: Painted ANSI styling helper to print text in different RGB colors and log helper methods (`success`, `warn`, `error`, `sysLog`).
-- **Flexible Exiting**: Support for both standard JVM termination on exit (`System.exit(0)`) or gentle loops returning for embedded systems.
+- **Themed Box-Drawing UI** — Styled menus with `SINGLE`, `DOUBLE`, `SQUIRCLE`, and `CLASSIC` border styles
+- **Breadcrumb Navigation** — Automatically shows path like `Home › Rooms › Settings`
+- **Nested Submenus** — Link menus in a parent-child hierarchy; submenus auto-get a `[B] Back` shortcut
+- **Bottom Navigation Bar** — System shortcuts (`[B] Back`, `[E] Exit`, `[S] Setting`) rendered in a clean footer row
+- **Colored Output** — RGB ANSI helper with `success`, `warn`, `error`, `sysLog` badges
+- **Input Validation** — Bulletproof `Scanner` wrappers for `String`, `int`, `double`, `Long`, `Float`
 
 ---
 
-## Getting Started
+## Quick Start
 
-### Prerequisites
-
-- **Java Development Kit (JDK)**: Version 17 or higher.
-- **Gradle**: Uses the Gradle Wrapper included in the repository.
-
-### Building the Project
-
-To build the library and generate the JAR file:
+**Requirements:** Java 17+, Gradle (wrapper included)
 
 ```bash
+# Build
 ./gradlew build
-```
 
-The compiled library JAR, sources JAR, and Javadoc JAR will be generated in `build/libs/`:
-- `ConsoleMenu-1.0.0.jar`
-- `ConsoleMenu-1.0.0-sources.jar`
-- `ConsoleMenu-1.0.0-javadoc.jar`
-
-### Running the Demo Example
-
-You can run the built-in demo to test the menu:
-
-```bash
+# Run the built-in demo
 ./gradlew runExample
 ```
 
 ---
 
-## How to Import & Use in Other Projects
+## Usage
 
-### Option 1: Pushing to Git and Using JitPack (Recommended)
+```java
+import com.ersikthy.consolemenu.Menu;
+import com.ersikthy.consolemenu.style.Theme;
+import static com.ersikthy.consolemenu.util.Output.*;
 
-Since you want to upload this project to Git to use it in other projects, the easiest way to consume it is via [JitPack](https://jitpack.io/).
+public class Main {
+    public static void main(String[] args) {
 
-1. **Push this project to your GitHub repository** (e.g., `github.com/your-username/ConsoleMenu`).
-2. **Create a release** or just use the latest commit hash.
-3. In your **other** project's `build.gradle.kts`, add:
+        Menu mainMenu = new Menu("Main Menu", Theme.COZY);
+        mainMenu.addOption("Say Hello", () -> success("Hello!"));
+        mainMenu.addOption("System Status", () -> sysLog("All systems operational."));
 
+        // Submenu as numbered option
+        Menu demoMenu = new Menu("Demo", Theme.COZY);
+        demoMenu.addOption("Toggle Debug", () -> success("Debug on."));
+        demoMenu.addSysOpt("Exit", demoMenu::exit);
+        mainMenu.addSubMenu(demoMenu);
+
+        // Submenu in the footer bar (press [S] to open)
+        Menu settingMenu = new Menu("Settings", Theme.COZY);
+        settingMenu.addOption("Switch to Cyberpunk", () -> {
+            settingMenu.setTheme(Theme.CYBERPUNK);
+            success("Theme updated!");
+        });
+        mainMenu.addSysSubMenu("Setting", settingMenu);
+
+        // Footer shortcuts
+        mainMenu.addSysOpt("Exit", mainMenu::exit);
+        mainMenu.addSysOpt("Help", () -> sysLog("Type a number or shortcut key."));
+
+        mainMenu.displayMenu();
+    }
+}
+```
+
+**Output:**
+```
+╭──────────────────────────────────────────╮
+│                Main Menu                 │
+│  Nav: Main Menu                          │
+├──────────────────────────────────────────┤
+│   [1]  Say Hello                         │
+│   [2]  System Status                     │
+│   [3]  Demo                              │
+├──────────────────────────────────────────┤
+│  [S] Setting  [E] Exit    [H] Help       │
+╰──────────────────────────────────────────╯
+> Enter here:
+```
+
+---
+
+## API Reference
+
+### `Menu`
+
+| Method | Description |
+|---|---|
+| `new Menu(title, theme)` | Create a menu with title and theme |
+| `addOption(label, action)` | Add a numbered menu item |
+| `addSysOpt(label, action)` | Add a shortcut to the footer bar |
+| `addSubMenu(menu)` | Add a submenu as a numbered option (auto-injects `[B] Back`) |
+| `addSysSubMenu(label, menu)` | Add a submenu to the footer bar (auto-injects `[B] Back`) |
+| `setTheme(theme)` | Change the theme at runtime |
+| `setListPrinter(runnable)` | Print custom content above the menu box |
+| `back()` | Close this menu and return to parent |
+| `exit()` | Terminate the application |
+| `displayMenu()` | Start the interactive loop |
+| `getBreadCrumb()` | Get full path string e.g. `Home › Settings` |
+| `getParent()` | Get the parent menu |
+| `getSubMenus()` | Get list of registered submenus |
+
+### Themes
+
+| Theme | Border | Colors |
+|---|---|---|
+| `Theme.DEFAULT` | `SINGLE` `┌ ┐ └ ┘` | Green / Cyan / White |
+| `Theme.COZY` | `SQUIRCLE` `╭ ╮ ╰ ╯` | Orange / Yellow / Orange |
+| `Theme.CYBERPUNK` | `DOUBLE` `╔ ╗ ╚ ╝` | Magenta / Cyan / Magenta |
+
+### Output Utilities
+
+```java
+import static com.ersikthy.consolemenu.util.Output.*;
+
+success("Operation completed.");    // green badge
+warn("Disk space low.");            // orange badge
+error("Connection failed.");        // red badge
+sysLog("Cache cleared.");           // gray badge
+println("Custom text", Color.CYAN);
+```
+
+### Input Utilities
+
+```java
+import static com.ersikthy.consolemenu.util.Input.*;
+
+String name  = readStr(scanner, "Name: ");
+int    age   = readInt(scanner, "Age: ");
+double price = readDouble(scanner, "Price: ");
+```
+
+---
+
+## Displaying Special Characters in IntelliJ IDEA
+
+By default, IntelliJ's Run console may show `?` or broken boxes instead of border characters like `╭ ╮ ╰ ╯ ├ ┤ │ ─`.
+
+### Fix 1: Enable UTF-8 in the Run Console (Recommended)
+
+Add the JVM option `-Dfile.encoding=UTF-8` to your Run Configuration:
+
+1. Open **Run > Edit Configurations...**
+2. Select your run config (e.g. `runExample`)
+3. Click **Modify options > Add VM options**
+4. Add: `-Dfile.encoding=UTF-8`
+5. Click **Apply** → **Run**
+
+Or add it directly in [`build.gradle.kts`](build.gradle.kts) so it applies to all runs:
+
+```kotlin
+tasks.register<JavaExec>("runExample") {
+    group = "application"
+    mainClass.set("com.ersikthy.consolemenu.example.Example")
+    classpath = sourceSets["main"].runtimeClasspath
+    standardInput = System.`in`
+    jvmArgs("-Dfile.encoding=UTF-8")   // <-- add this line
+}
+```
+
+### Fix 2: Use IntelliJ's Built-in Terminal Instead
+
+The built-in terminal renders Unicode correctly out of the box:
+
+1. Open **View > Tool Windows > Terminal** (or press `` Alt+F12 ``)
+2. Run the program directly:
+```bash
+./gradlew runExample
+```
+
+### Fix 3: Set UTF-8 as Default for All Projects
+
+Go to **Help > Edit Custom VM Options...** and add:
+
+```
+-Dfile.encoding=UTF-8
+-Dconsole.encoding=UTF-8
+```
+
+Restart IntelliJ after saving.
+
+---
+
+## Import in Other Projects
+
+**Via JitPack** (push to GitHub first):
 ```kotlin
 repositories {
     mavenCentral()
     maven { url = uri("https://jitpack.io") }
 }
-
 dependencies {
     implementation("com.github.Ersikthy:ConsoleMenu:1.0.0")
 }
 ```
 
-*(Note: Replace `your-username` with your actual GitHub username, and `1.0.0` with your tag/commit hash).*
-
-### Option 2: Local JAR file import
-
-Copy the generated `ConsoleMenu-1.0.0.jar` from `build/libs/` to a `libs/` folder in your other project, then add this to its `build.gradle.kts`:
-
+**Via local JAR** (copy `build/libs/ConsoleMenu-1.0.0.jar` to `libs/`):
 ```kotlin
 dependencies {
     implementation(files("libs/ConsoleMenu-1.0.0.jar"))
@@ -78,37 +204,6 @@ dependencies {
 
 ---
 
-## Usage Example
-
-Here is a quick look at how to build and display a menu:
-
-```java
-import com.ersikthy.consolemenu.Menu;
-import static com.ersikthy.consolemenu.util.Output.*;
-
-public class Main {
-    public static void main(String[] args) {
-        Menu menu = new Menu("My App Menu");
-        
-        // Add menu options
-        menu.addOption("Option One", () -> success("You selected Option One!"));
-        menu.addOption("Submenu", () -> {
-            Menu sub = new Menu("Submenu Options");
-            sub.addOption("Nested action", () -> sysLog("Doing sub-work."));
-            sub.displayMenu(); // 'back' option will return here
-        });
-
-        // Optional custom display header
-        menu.setListPrinter(() -> println("System Active", java.awt.Color.GREEN));
-
-        // Start display loop
-        menu.displayMenu();
-    }
-}
-```
-
----
-
 ## License
 
-This library is licensed under the **MIT License**. You are free to copy, modify, distribute, and use it in any private or commercial projects without restrictions.
+MIT — free to use, modify, and distribute.
