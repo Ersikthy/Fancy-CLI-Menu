@@ -1,3 +1,5 @@
+Language: [Vietmaese](README_VN.md) | [English]
+
 # Fancy-CLI-Menu
 
 A lightweight Java library for building interactive terminal/CLI menus with themes, breadcrumb navigation, and nested submenus.
